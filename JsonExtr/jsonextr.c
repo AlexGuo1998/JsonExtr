@@ -191,17 +191,18 @@ JsonExtrStru json_extract(const char *input, size_t length, const char *path) {
 			jsonindex = skipspace(input, jsonindex + 1, length);
 			bool found = false;
 			while (!isarrayindex || arrayindex > 0) {
-				//skip name(string)
+				//compare name
 				if (jsonindex == (size_t)-1 || input[jsonindex] != '"') {
 					return (JsonExtrStru){jsonindex, pathindex, jerror_badjson};
 				}
 				size_t jsonindex1 = skipstring(input, jsonindex + 1, length);//after name
-				size_t realnamelength = jsonindex1 - jsonindex - 2;
-				if (realnamelength == namelength && memcmp(&path[pathindex], &input[jsonindex + 1], namelength) == 0) {
-					//hit
-					found = true;
+				if (!isarrayindex) {
+					size_t realnamelength = jsonindex1 - jsonindex - 2;
+					if (realnamelength == namelength && memcmp(&path[pathindex], &input[jsonindex + 1], namelength) == 0) {
+						//hit
+						found = true;
+					}
 				}
-				//jsonindex = jsonindex1;
 
 				jsonindex = skipspace(input, jsonindex1, length);
 				if (jsonindex == (size_t)-1 || input[jsonindex] != ':') {

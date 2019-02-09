@@ -53,7 +53,7 @@ const char *path = "\n0\n\n1";
 
 Notice the additional `\n`.
 
-_Hint: use numeric key on objects to retrieve object name._
+_Hint: use numeric key on objects to retrieve object property name._
 
 ## Iterate object properties (dict keys)
 

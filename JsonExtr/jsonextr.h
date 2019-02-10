@@ -1,6 +1,10 @@
 #pragma once
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum _JsonType {
 	jtype_null = 0,
 	jtype_object = 1, //dict
@@ -46,3 +50,7 @@ JsonExtrStru json_extract(const char *input, size_t length, const char *path);
 #define json_isExtractError(jsonextstru) ((jsonextstru).type < 0)
 
 JsonType json_getType(const char *input, size_t length);
+
+#ifdef __cplusplus
+}
+#endif

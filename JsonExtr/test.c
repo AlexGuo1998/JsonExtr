@@ -53,33 +53,28 @@ void iterate_helper(const char *json, size_t jsonlen, JsonType type, size_t inde
 		while (true) {
 			snprintf(path, 32, "\n%d", index);
 			s = json_extract(json, jsonlen, path);
-			if (json_isExtractError(s)) {
-				break;
-			}
+			if (json_isExtractError(s)) break;
 			for (size_t i = 0; i < indent; i++) putchar(' ');
 			printf("#%d: %.*s (%s)\n", index, s.len, json + s.start, types[s.type]);
-			if (s.type == jtype_array || s.type == jtype_object) {
-				iterate_helper(json + s.start, s.len, s.type, indent + 4);
-			}
+			iterate_helper(json + s.start, s.len, s.type, indent + 4);
 			index++;
 		}
 		break;
 	case jtype_object:
 		while (true) {
+			//get property name
 			snprintf(path, 32, "\n%d", index);
 			s1 = json_extract(json, jsonlen, path);
-			if (s1.type != jtype_string) {
-				break;
-			}
-			snprintf(path, 32,"%.*s", s1.len - 2, json + s1.start + 1);
+			if (s1.type != jtype_string) break;
+			//get content
+			snprintf(path, 32, "%.*s", s1.len - 2, json + s1.start + 1);
 			s = json_extract(json, jsonlen, path);
 			for (size_t i = 0; i < indent; i++) putchar(' ');
 			printf("\"%.*s\": %.*s (%s)\n", s1.len - 2, json + s1.start + 1, s.len, json + s.start, types[s.type]);
-			if (s.type == jtype_array || s.type == jtype_object) {
-				iterate_helper(json + s.start, s.len, s.type, indent + 4);
-			}
+			iterate_helper(json + s.start, s.len, s.type, indent + 4);
 			index++;
 		}
+		break;
 	default:
 		break;
 	}
@@ -91,7 +86,7 @@ void iterate(const char *json) {
 }
 
 int main() {
-	const char json[] = "{ \"key1\" : [0,1,2, 3 ,4] , \"key2\":{\"x\": true } }";
+	const char json[] = "{ \"key1\" : [0,1,2, 3 ,4] , \"key2\":{\"2\": true } }";
 	extracttest(json, "\n0");
 	extracttest(json, "key1");
 	extracttest(json, "key1\n\n3");
@@ -101,10 +96,13 @@ int main() {
 	extracttest(json, "\n1");
 	extracttest(json, "key2");
 	extracttest(json, "key2\n\n0");
-	extracttest(json, "key2\nx");
+	extracttest(json, "key2\n2");
+	extracttest(json, "key2\n\n2");
 	extracttest(json, "\n2");
 
-	iterate("[0,1,2,[3,4],{\"key1\":[0,1,2,3,4],\"key2\":{\"x\":true,\"y\":false,\"z\":null}}]");
+	const char json1[] = "[0,1,2,[3,4],{\"key1\":[\"zero\",1,2],\"key2\":{\"x\":true,\"y\":false,\"z\":null}}]";
+	printf("%s\n", json1);
+	iterate(json1);
 
 	getchar();
 	return 0;

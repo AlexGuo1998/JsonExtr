@@ -51,10 +51,39 @@ Code:
 const char *path = "\n0\n\n1";
 ```
 
+Output:
+
+```
+[[0,1,2],[3,4,5]]
+    ~
+Type: 4
+```
+
 Notice the additional `\n`.
 
 _Hint: use numeric key on objects to retrieve object property name._
 
 ## Iterate object properties (dict keys)
 
-Code: (See `test.c`)
+Code: See [`JsonExtr/test.c`](JsonExtr/test.c)
+
+Output:
+
+```
+[0,1,2,[3,4],{"key1":["zero",1,2],"key2":{"x":true,"y":false,"z":null}}]
+#0: 0 (number)
+#1: 1 (number)
+#2: 2 (number)
+#3: [3,4] (array)
+    #0: 3 (number)
+    #1: 4 (number)
+#4: {"key1":["zero",1,2],"key2":{"x":true,"y":false,"z":null}} (object)
+    "key1": ["zero",1,2] (array)
+        #0: "zero" (string)
+        #1: 1 (number)
+        #2: 2 (number)
+    "key2": {"x":true,"y":false,"z":null} (object)
+        "x": true (true)
+        "y": false (false)
+        "z": null (null)
+```

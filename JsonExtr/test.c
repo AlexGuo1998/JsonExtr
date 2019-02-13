@@ -99,8 +99,12 @@ int main() {
 	extracttest(json, "key2\n2");
 	extracttest(json, "key2\n\n2");
 	extracttest(json, "\n2");
+	extracttest("[ ]", "\n0");
+	extracttest("[ ]", "\n1");
+	extracttest("{ }", "\n0");
+	extracttest("{ }", "\n1");
 
-	const char json1[] = "[0,1,2,[3,4],{\"key1\":[\"zero\",1,2],\"key2\":{\"x\":true,\"y\":false,\"z\":null}}]";
+	const char json1[] = "[0,1,2,[3,4],{\"key1\":[\"zero\",1,2,[],{}],\"key2\":{\"x\":true,\"y\":false,\"z\":null}}]";
 	printf("%s\n", json1);
 	iterate(json1);
 

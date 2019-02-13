@@ -163,7 +163,10 @@ JsonExtrStru json_extract(const char *input, size_t length, const char *path) {
 			if (!isarrayindex) {
 				return (JsonExtrStru){jsonindex, pathindex, jerror_indextype};
 			}
-			jsonindex++;
+			jsonindex = skipspace(input, jsonindex + 1, length);
+			if (input[jsonindex] == ']') {
+				return (JsonExtrStru){jsonindex, pathindex, jerror_arrayrange};
+			}
 			//skip item
 			for (size_t i = 0; i < arrayindex; i++) {
 				jsonindex = skipitem(input, jsonindex, length);
@@ -173,7 +176,7 @@ JsonExtrStru json_extract(const char *input, size_t length, const char *path) {
 				}
 				if (input[jsonindex] != ',') {
 					if (input[jsonindex] == ']') {
-						return (JsonExtrStru) { jsonindex, pathindex, jerror_arrayrange };
+						return (JsonExtrStru){jsonindex, pathindex, jerror_arrayrange};
 					}
 					return (JsonExtrStru){jsonindex, pathindex, jerror_badjson};
 				}
@@ -189,6 +192,13 @@ JsonExtrStru json_extract(const char *input, size_t length, const char *path) {
 		} else if (input[jsonindex] == '{') {
 			size_t namelength = (nextpath - path) - pathindex;
 			jsonindex = skipspace(input, jsonindex + 1, length);
+			if (input[jsonindex] == '}') {
+				if (isarrayindex) {
+					return (JsonExtrStru){jsonindex, pathindex, jerror_arrayrange};
+				} else {
+					return (JsonExtrStru){jsonindex, pathindex, jerror_objectname};
+				}
+			}
 			bool found = false;
 			while (!isarrayindex || arrayindex > 0) {
 				//compare name
@@ -238,7 +248,7 @@ JsonExtrStru json_extract(const char *input, size_t length, const char *path) {
 			}
 			length = end;
 		} else {
-			return (JsonExtrStru){jsonindex, pathindex, jerror_indextype};
+			return (JsonExtrStru){jsonindex, pathindex, jerror_unextractable};
 		}
 		pathindex = nextpath - path + 1;
 	} while (running);

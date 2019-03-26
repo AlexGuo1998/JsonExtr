@@ -104,7 +104,7 @@ int main() {
 	extracttest("{ }", "\n0");
 	extracttest("{ }", "\n1");
 
-	const char json1[] = "[0,1,2,[3,4],{\"key1\":[\"zero\",1,2,[],{}],\"key2\":{\"x\":true,\"y\":false,\"z\":null}}]";
+	const char json1[] = "[0,1,2,[3,4],{\"key1\":[\"zero\",-1,2,[],{}],\"key2\":{\"x\":true,\"y\":false,\"z\":null,\"test\":\"a\\\"\\\\b\\\\\"}}]";
 	printf("%s\n", json1);
 	iterate(json1);
 

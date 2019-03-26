@@ -22,7 +22,8 @@ static inline size_t skipspace(const char *input, size_t offset, size_t length) 
 }
 
 static inline size_t skipstring(const char *input, size_t offset, size_t length) {
-	while (input[offset] != '"' || input[offset - 1] == '\\') {
+	while (input[offset] != '"') {
+		if (input[offset] == '\\') offset++; //escape next char
 		offset++;
 		if (offset >= length) {
 			return (size_t)-1;
